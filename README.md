@@ -5,9 +5,9 @@
 
 ## Installation
 ```
-cordova plugin add QRCode
+cordova plugin add cordova-plugin-qrcode
 ```
-    
+
 ## Usage
 js调用
 
@@ -36,5 +36,3 @@ button.onclick = function() {
 ---
 
 Apache License 2.0
-
-

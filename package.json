@@ -1,5 +1,5 @@
 {
-  "name": "QRCode",
+  "name": "cordova-plugin-qrcode",
   "version": "1.0.0-dev",
   "description": "Cordova QRCode Plugin",
   "cordova": {
@@ -16,8 +16,8 @@
     "cordova",
     "QRCode",
     "ecosystem:cordova",
-    "cordova-ios",
-  ],
+    "cordova-ios"
+],
   "scripts": {
     "test": "npm run jshint",
     "jshint": "node node_modules/jshint/bin/jshint www && node node_modules/jshint/bin/jshint src && node node_modules/jshint/bin/jshint tests"
