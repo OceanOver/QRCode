@@ -33,6 +33,5 @@ button.onclick = function() {
 - iOS
 
 ## License
----
 
 Apache License 2.0
