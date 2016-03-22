@@ -9,7 +9,7 @@
     <author>YT</author>
     <license>Apache 2.0</license>
     <keywords>cordova,qrcode</keywords>
-    <repo>代码仓库地址</repo>
+    <repo>https://git@github.com:OceanOver/QRCode.git</repo>
 
     <js-module src="www/QRCode.js" name="QRCode">
         <clobbers target="QRCode" />
