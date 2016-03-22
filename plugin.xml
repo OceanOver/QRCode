@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+    id="cordova-plugin-QRCode"
+    version="1.0.0-dev">
+
+    <name>QRCode</name>
+    <description>Cordova QRCode Plugin</description>
+    <author>YT</author>
+    <license>Apache 2.0</license>
+    <keywords>cordova,qrcode</keywords>
+    <repo>代码仓库地址</repo>
+
+    <js-module src="www/QRCode.js" name="QRCode">
+        <clobbers target="QRCode" />
+    </js-module>
+
+     <!-- ios -->
+     <platform name="ios">
+         <config-file target="config.xml" parent="/*">
+             <feature name="QRCode">
+                 <param name="ios-package" value="CDVQRCode" />
+             </feature>
+         </config-file>
+
+         <header-file src="src/ios/CDVQRCode.h" />
+         <source-file src="src/ios/CDVQRCode.m" />
+         <header-file src="src/ios/QRCodeViewController.h" />
+         <source-file src="src/ios/QRCodeViewController.m" />
+
+         <framework src="AVFoundation.framework" />
+     </platform>
+
+</plugin>
