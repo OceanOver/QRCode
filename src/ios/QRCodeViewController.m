@@ -48,7 +48,6 @@
     if ([self.session canAddOutput:self.output]) {
         [self.session addOutput:self.output];
     }
-    // 条码类型/Users/just-imac/Downloads/cordova-plugin-camera-master/package.json
     self.output.metadataObjectTypes = @[ AVMetadataObjectTypeQRCode ];
     // Preview
     self.preview = [AVCaptureVideoPreviewLayer layerWithSession:self.session];

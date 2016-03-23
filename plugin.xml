@@ -2,7 +2,7 @@
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
     id="cordova-plugin-QRCode"
-    version="1.0.0-dev">
+    version="1.0.2-dev">
 
     <name>QRCode</name>
     <description>Cordova QRCode Plugin</description>

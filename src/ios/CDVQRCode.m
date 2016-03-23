@@ -9,9 +9,7 @@
 #import "CDVQRCode.h"
 #import "QRCodeViewController.h"
 
-@interface CDVQRCode () {
-    QRCodeViewController *_qrCodeController;
-}
+@interface CDVQRCode ()
 
 @end
 
@@ -19,12 +17,10 @@
 
 - (void)scanCode:(CDVInvokedUrlCommand*)command {
     NSString *callBackId = command.callbackId;
-    if (!_qrCodeController) {
-        _qrCodeController = [[QRCodeViewController alloc] init];
-    }
-    _qrCodeController.callBackId = callBackId;
-    _qrCodeController.qrCode = self;
-    [self.viewController presentViewController:_qrCodeController animated:YES completion:nil];
+    QRCodeViewController *qrCodeController = [[QRCodeViewController alloc] init];
+    qrCodeController.callBackId = callBackId;
+    qrCodeController.qrCode = self;
+    [self.viewController presentViewController:qrCodeController animated:YES completion:nil];
 }
 
 @end
