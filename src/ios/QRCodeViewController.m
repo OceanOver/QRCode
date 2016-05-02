@@ -11,14 +11,12 @@
 
 @interface QRCodeViewController () <AVCaptureMetadataOutputObjectsDelegate>
 
+@property (strong, nonatomic) UIButton *backButton;
+@property (strong, nonatomic) UIView *navView;
 @property (strong, nonatomic) AVCaptureDevice *device;
-
 @property (strong, nonatomic) AVCaptureDeviceInput *input;
-
 @property (strong, nonatomic) AVCaptureMetadataOutput *output;
-
 @property (strong, nonatomic) AVCaptureSession *session;
-
 @property (strong, nonatomic) AVCaptureVideoPreviewLayer *preview;
 
 @end
@@ -28,7 +26,34 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    [self addBackButton];
     [self setupCamera];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    self.backButton.hidden = NO;
+    self.navView.hidden = NO;
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    self.backButton.hidden = YES;
+    self.navView.hidden = YES;
+}
+
+- (void)addBackButton {
+    UIWindow *window = [UIApplication sharedApplication].windows[0];
+    CGFloat screenW = [UIScreen mainScreen].bounds.size.width;
+    _navView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, screenW, 64)];
+    _navView.backgroundColor = [UIColor colorWithRed:0.0588 green:0.0588 blue:0.0588 alpha:1.0];
+    _navView.alpha = 0.6;
+    [window addSubview:_navView];
+    _backButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _backButton.frame = CGRectMake(16, 26, 32, 32);
+    [_backButton setBackgroundImage:[UIImage imageNamed:@"qrcode_back"] forState:0];
+    [_backButton addTarget:self action:@selector(clickBack) forControlEvents:UIControlEventTouchUpInside];
+    [window addSubview:_backButton];
 }
 
 - (void)setupCamera {
@@ -56,7 +81,32 @@
     [self.view.layer addSublayer:self.preview];
     // Start
 
+    [self setScanRegion];
     [self.session startRunning];
+}
+
+- (void)setScanRegion {
+    UIImageView *overlayImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"focus.png"]];
+    overlayImageView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.view addSubview:overlayImageView];
+
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:overlayImageView
+                                                          attribute:NSLayoutAttributeCenterY
+                                                         multiplier:1.0
+                                                           constant:0]];
+
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.view attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:overlayImageView
+                                                          attribute:NSLayoutAttributeCenterX
+                                                         multiplier:1.0
+                                                           constant:0]];
+
+    CGFloat screenHeight = [UIScreen mainScreen].bounds.size.height;
+    CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
+
+    _output.rectOfInterest = CGRectMake((screenHeight - 200) / 2 / screenHeight,
+                                        (screenWidth - 260) / 2 / screenWidth,
+                                        200 / screenHeight,
+                                        260 / screenWidth);
 }
 
 #pragma mark - AVCaptureMetadataOutputObjectsDelegate
@@ -72,8 +122,13 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+- (void)clickBack {
     [self dismissViewControllerAnimated:NO completion:nil];
+}
+
+- (void)dealloc {
+    [self.backButton removeFromSuperview];
+    [self.navView removeFromSuperview];
 }
 
 - (void)didReceiveMemoryWarning {

@@ -2,7 +2,7 @@
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
     id="cordova-plugin-QRCode"
-    version="1.0.2-dev">
+    version="1.1.1-dev">
 
     <name>QRCode</name>
     <description>Cordova QRCode Plugin</description>
@@ -27,6 +27,11 @@
          <source-file src="src/ios/CDVQRCode.m" />
          <header-file src="src/ios/QRCodeViewController.h" />
          <source-file src="src/ios/QRCodeViewController.m" />
+
+         <source-file src="src/ios/qrcode_back@2x.png" />
+         <source-file src="src/ios/qrcode_back@3x.png" />
+         <source-file src="src/ios/focus@2x.png" />
+         <source-file src="src/ios/focus@3x.png" />
 
          <framework src="AVFoundation.framework" />
      </platform>

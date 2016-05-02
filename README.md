@@ -16,21 +16,18 @@ var button = document.getElementsByClassName('QRCode')[0];
 
 button.onclick = function() {
 
-    QRCode.scanCode(success, fail);
+    QRCode.scanCode(success);
 
     function success(info) {
         alert(info);
     }
-
-    function fail() {
-        alert('扫描二维码失败');
-    }
+    
 };
 ```
 
 ## Supported Platforms
 
-- iOS
+- iOS 8.0
 
 ## License
 
