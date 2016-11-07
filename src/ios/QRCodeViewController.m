@@ -16,8 +16,10 @@
 @property (strong, nonatomic) AVCaptureDevice *device;
 @property (strong, nonatomic) AVCaptureDeviceInput *input;
 @property (strong, nonatomic) AVCaptureMetadataOutput *output;
+@property (nonatomic, strong) AVCaptureConnection *connection;
 @property (strong, nonatomic) AVCaptureSession *session;
 @property (strong, nonatomic) AVCaptureVideoPreviewLayer *preview;
+@property (nonatomic, assign) UIDeviceOrientation preOrientation;
 
 @end
 
@@ -26,7 +28,25 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    self.preOrientation = [UIDevice currentDevice].orientation;
     [self addBackButton];
+    [self setupCamera];
+    [self addObserver];
+}
+
+// observer screen orientation
+- (void)addObserver {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
+}
+
+- (void)orientChange:(NSNotification *)noti {
+    UIDeviceOrientation orient = [UIDevice currentDevice].orientation;
+    if (orient == UIDeviceOrientationFaceUp || orient == UIDeviceOrientationFaceDown || orient == self.preOrientation) {
+        return;
+    }
+    self.preOrientation = orient;
+    CGFloat screenW = [UIScreen mainScreen].bounds.size.width;
+    self.navView.frame = CGRectMake(0, 0, screenW, 64);
     [self setupCamera];
 }
 
@@ -57,6 +77,22 @@
 }
 
 - (void)setupCamera {
+    if (self.device) {
+        self.device = nil;
+    }
+    if (self.input) {
+        self.input = nil;
+    }
+    if (self.output) {
+        self.output = nil;
+    }
+    if (self.session) {
+        self.session = nil;
+    }
+    if (self.preview) {
+        [self.preview removeFromSuperlayer];
+        self.preview = nil;
+    }
     // Device
     self.device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
     // Input
@@ -78,11 +114,34 @@
     self.preview = [AVCaptureVideoPreviewLayer layerWithSession:self.session];
     self.preview.videoGravity = AVLayerVideoGravityResizeAspectFill;
     self.preview.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+    self.preview.connection.videoOrientation = [self videoOrientationFromCurrentDeviceOrientation];
     [self.view.layer addSublayer:self.preview];
-    // Start
 
+    // Start
     [self setScanRegion];
     [self.session startRunning];
+}
+
+- (AVCaptureVideoOrientation) videoOrientationFromCurrentDeviceOrientation {
+    // 将视频的旋转与设备同步
+    UIDeviceOrientation orient = [UIDevice currentDevice].orientation;
+    switch (orient) {
+        case UIInterfaceOrientationPortrait: {
+            return AVCaptureVideoOrientationPortrait;
+        }
+        case UIInterfaceOrientationLandscapeLeft: {
+            return AVCaptureVideoOrientationLandscapeLeft;
+        }
+        case UIInterfaceOrientationLandscapeRight: {
+            return AVCaptureVideoOrientationLandscapeRight;
+        }
+        case UIInterfaceOrientationPortraitUpsideDown: {
+            return AVCaptureVideoOrientationPortraitUpsideDown;
+        }
+        default:
+            break;
+    }
+    return AVCaptureVideoOrientationPortrait;
 }
 
 - (void)setScanRegion {
@@ -99,14 +158,17 @@
                                                           attribute:NSLayoutAttributeCenterX
                                                          multiplier:1.0
                                                            constant:0]];
+    [self resetScanRegion];
+}
 
+- (void)resetScanRegion {
     CGFloat screenHeight = [UIScreen mainScreen].bounds.size.height;
     CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
 
-    _output.rectOfInterest = CGRectMake((screenHeight - 200) / 2 / screenHeight,
-                                        (screenWidth - 260) / 2 / screenWidth,
-                                        200 / screenHeight,
-                                        260 / screenWidth);
+    _output.rectOfInterest = CGRectMake((screenHeight - 160) / 2 / screenHeight,
+                                        (screenWidth - 208) / 2 / screenWidth,
+                                        160 / screenHeight,
+                                        208 / screenWidth);
 }
 
 #pragma mark - AVCaptureMetadataOutputObjectsDelegate
@@ -129,6 +191,7 @@
 - (void)dealloc {
     [self.backButton removeFromSuperview];
     [self.navView removeFromSuperview];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)didReceiveMemoryWarning {

@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-qrcode",
-  "version": "1.1.1-dev",
+  "version": "1.1.2-dev",
   "description": "Cordova QRCode Plugin",
   "cordova": {
     "id": "cordova-plugin-QRCode.QRCode",
@@ -18,13 +18,6 @@
     "ecosystem:cordova",
     "cordova-ios"
 ],
-  "scripts": {
-    "test": "npm run jshint",
-    "jshint": "node node_modules/jshint/bin/jshint www && node node_modules/jshint/bin/jshint src && node node_modules/jshint/bin/jshint tests"
-  },
   "author": "YT",
-  "license": "Apache-2.0",
-  "devDependencies": {
-    "jshint": "^2.6.0"
-  }
+  "license": "Apache-2.0"
 }
